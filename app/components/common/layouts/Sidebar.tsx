@@ -6,15 +6,15 @@ interface SidebarProps {
         title: string;
     }>;
     description: string;
-    social: ReadonlyArray<{
-        icon: React.ElementType;
-        name: string;
-    }>;
+    // social: ReadonlyArray<{
+    //     icon: React.ElementType;
+    //     name: string;
+    // }>;
     title: string;
 }
 
 export default function Sidebar(props: SidebarProps) {
-    const { archives, description, social, title } = props;
+    const { archives, description, title } = props;
 
     return (
         <Grid item xs={12} md={4}>
@@ -32,7 +32,7 @@ export default function Sidebar(props: SidebarProps) {
                     {archive.title}
                 </Link>
             ))}
-            <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
+            {/* <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
                 Social
             </Typography>
             {social.map((network) => (
@@ -47,7 +47,7 @@ export default function Sidebar(props: SidebarProps) {
                         <span>{network.name}</span>
                     </Stack>
                 </Link>
-            ))}
+            ))} */}
         </Grid>
     );
 }

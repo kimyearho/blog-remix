@@ -14,7 +14,7 @@ interface ISidebar {
   title: string
   description: string
   archives: ISection[]
-  social: any[]
+  // social: any[]
 }
 
 interface IMainPost {

@@ -13,6 +13,7 @@ import ClientStyleContext from './ClientStyleContext';
 import { withEmotionCache } from '@emotion/react';
 import { Container, unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material';
 import { CoError404, CoError500, CoErrorInspection } from '@/components';
+import { SWRConfig } from 'swr';
 
 interface DocumentProps {
   children: React.ReactNode;
@@ -70,7 +71,11 @@ export default function App() {
     <Document title='Hello, Remix'>
       <Container maxWidth="lg">
         {/* <Box sx={{ my: 8 }}> */}
-        <Outlet />
+        <SWRConfig value={{
+          fetcher: (resource, init) => fetch(resource, init).then(res => res.json())
+        }}>
+          <Outlet />
+        </SWRConfig>
         {/* </Box> */}
       </Container>
     </Document>

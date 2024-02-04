@@ -1,7 +1,6 @@
-import { MetaFunction, Outlet, json, useLoaderData, useLocation } from "@remix-run/react"
+import { Outlet, json, useLoaderData, useLocation } from "@remix-run/react"
 import { IHomeLoader } from "~/interface/IProps";
 import { Grid } from "@mui/material";
-import { Abc } from '@mui/icons-material';
 import Footer from "~/components/common/layouts/Footer"
 import Header from "~/components/common/layouts/Header"
 import MainFeaturedPost from "~/components/MainFeaturedPost";
@@ -30,22 +29,7 @@ export const loader = async () => {
                     description:
                         'Etiam porta sem malesuada magna mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.',
                     archives: [
-                        { title: 'March 2020', url: '#' },
-                        { title: 'February 2020', url: '#' },
-                        { title: 'January 2020', url: '#' },
-                        { title: 'November 1999', url: '#' },
-                        { title: 'October 1999', url: '#' },
-                        { title: 'September 1999', url: '#' },
-                        { title: 'August 1999', url: '#' },
-                        { title: 'July 1999', url: '#' },
-                        { title: 'June 1999', url: '#' },
-                        { title: 'May 1999', url: '#' },
-                        { title: 'April 1999', url: '#' },
-                    ],
-                    social: [
-                        { name: 'GitHub', icon: Abc },
-                        { name: 'X', icon: Abc },
-                        { name: 'Facebook', icon: Abc },
+                        { title: 'Movie 페이지', url: '/movie' },
                     ],
                 },
                 mainFeaturedPost: {
@@ -77,9 +61,6 @@ export const loader = async () => {
             }
         }
     )
-    // throw new Response("현재 서비스 점검중입니다!", {
-    //     status: 999,
-    // });
 }
 
 export const DefaultLayout = () => {
@@ -103,7 +84,6 @@ export const DefaultLayout = () => {
                         title={sidebar.title}
                         description={sidebar.description}
                         archives={sidebar.archives}
-                        social={sidebar?.social}
                     />
                     <Outlet />
                 </Grid>
