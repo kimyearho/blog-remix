@@ -9,9 +9,10 @@ import {
   useRouteError,
   isRouteErrorResponse,
 } from '@remix-run/react';
-import { withEmotionCache } from '@emotion/react';
-import { Box, Container, unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material';
 import ClientStyleContext from './ClientStyleContext';
+import { withEmotionCache } from '@emotion/react';
+import { Container, unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material';
+import { CoError404, CoError500, CoErrorInspection } from '@/components';
 
 interface DocumentProps {
   children: React.ReactNode;
@@ -20,7 +21,6 @@ interface DocumentProps {
 
 const Document = withEmotionCache(({ children, title }: DocumentProps, emotionCache) => {
   const clientStyleData = React.useContext(ClientStyleContext);
-
   // Only executed on client
   useEnhancedEffect(() => {
     // re-link sheet container
@@ -82,29 +82,34 @@ export function ErrorBoundary() {
   const error = useRouteError();
 
   if (isRouteErrorResponse(error)) {
-    let message;
     switch (error.status) {
-      case 401:
-        message = <p>Oops! Looks like you tried to visit a page that you do not have access to.</p>;
-        break;
       case 404:
-        message = <p>Oops! Looks like you tried to visit a page that does not exist.</p>;
-        break;
-
+        return (
+          <>
+            <Document title={`Remix-Blog ${error.data}`}>
+              <CoError404 errorData={error} />
+            </Document>
+          </>
+        )
+      case 500:
+        return (
+          <>
+            <Document title={`Remix-Blog ${error.data}`}>
+              <CoError500 errorData={error} />
+            </Document>
+          </>
+        )
+      case 999:
+        return (
+          <>
+            <Document title={`Remix-Blog ${error.data}`}>
+              <CoErrorInspection errorData={error} />
+            </Document>
+          </>
+        )
       default:
         throw new Error(error.data || error.statusText);
     }
-
-    return (
-      <Document title={`${error.status} ${error.statusText}`}>
-        {/* <Layout> */}
-        <h1>
-          {error.status}: {error.statusText}
-        </h1>
-        {message}
-        {/* </Layout> */}
-      </Document>
-    );
   }
 
   if (error instanceof Error) {
