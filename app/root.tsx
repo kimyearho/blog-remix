@@ -86,13 +86,12 @@ export default function App() {
   return (
     <Document title='Hello, Remix'>
       <Container maxWidth="lg">
-        {/* <Box sx={{ my: 8 }}> */}
         <SWRConfig value={{
-          fetcher: fetcher
+          fetcher: fetcher,
+          revalidateOnFocus: false
         }}>
           <Outlet />
         </SWRConfig>
-        {/* </Box> */}
       </Container>
     </Document>
   );

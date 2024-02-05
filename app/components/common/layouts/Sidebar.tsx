@@ -1,4 +1,5 @@
-import { Grid, Link, Paper, Stack, Typography } from "@mui/material";
+import { Grid, Paper, Stack, Typography } from "@mui/material";
+import { Link } from "@remix-run/react";
 
 interface SidebarProps {
     archives: ReadonlyArray<{
@@ -28,7 +29,7 @@ export default function Sidebar(props: SidebarProps) {
                 Archives
             </Typography>
             {archives.map((archive) => (
-                <Link display="block" variant="body1" href={archive.url} key={archive.title}>
+                <Link to={archive.url} key={archive.title}>
                     {archive.title}
                 </Link>
             ))}
