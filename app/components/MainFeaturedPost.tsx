@@ -1,4 +1,5 @@
 import { Box, Grid, Link, Paper, Typography } from "@mui/material";
+import useSWR from "swr";
 
 interface MainFeaturedPostProps {
     post: {
@@ -12,6 +13,10 @@ interface MainFeaturedPostProps {
 
 export default function MainFeaturedPost(props: MainFeaturedPostProps) {
     const { post } = props;
+    const { data, error, isLoading } = useSWR('/market/items/search')
+
+    if (error) return <div>failed to load</div>
+    if (isLoading) return <div>loading...</div>
 
     return (
         <Paper

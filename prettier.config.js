@@ -10,7 +10,7 @@ module.exports = {
   semi: false,
   singleAttributePerLine: false,
   singleQuote: true,
-  tabWidth: 2,
+  tabWidth: 4,
   useTabs: false,
   vueIndentScriptAndStyle: false
 }

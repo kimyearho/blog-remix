@@ -8,34 +8,42 @@ import {
   ScrollRestoration,
   useRouteError,
   isRouteErrorResponse,
+  json,
+  useLoaderData,
 } from '@remix-run/react';
 import ClientStyleContext from './ClientStyleContext';
 import { withEmotionCache } from '@emotion/react';
 import { Container, unstable_useEnhancedEffect as useEnhancedEffect } from '@mui/material';
 import { CoError404, CoError500, CoErrorInspection } from '@/components';
 import { SWRConfig } from 'swr';
+import { http } from "~/modules/api/http";
 
 interface DocumentProps {
   children: React.ReactNode;
   title?: string;
 }
 
+//* 전역 Axios fetcher
+// https://swr.vercel.app/ko/docs/data-fetching
+const fetcher = (url: any) => http.get(url).then(res => res.data)
+
+//* 전역 클라이언트에서 환경변수를 사용하기위해서 설정.
+// https://sergiodxa.com/tutorials/use-process-env-client-side-with-remix
+export const loader = async () => {
+  return json({ ENV: { BASE_URL: process.env.BASE_URL, API_KEY: process.env.API_KEY } })
+}
+
 const Document = withEmotionCache(({ children, title }: DocumentProps, emotionCache) => {
+  const data = useLoaderData<typeof loader>();
   const clientStyleData = React.useContext(ClientStyleContext);
-  // Only executed on client
   useEnhancedEffect(() => {
-    // re-link sheet container
     emotionCache.sheet.container = document.head;
-    // re-inject tags
     const tags = emotionCache.sheet.tags;
     emotionCache.sheet.flush();
     tags.forEach((tag) => {
-      // eslint-disable-next-line no-underscore-dangle
       (emotionCache.sheet as any)._insertTag(tag);
     });
-    // reset cache to reapply global styles
     clientStyleData.reset();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -55,10 +63,18 @@ const Document = withEmotionCache(({ children, title }: DocumentProps, emotionCa
         <meta name="emotion-insertion-point" content="emotion-insertion-point" />
       </head>
       <body>
-        {children}
         <ScrollRestoration />
+        {/* https://sergiodxa.com/tutorials/use-process-env-client-side-with-remix */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.process = ${JSON.stringify({
+              env: data.ENV,
+            })}`,
+          }}
+        />
         <Scripts />
         <LiveReload />
+        {children}
       </body>
     </html>
   );
@@ -72,7 +88,7 @@ export default function App() {
       <Container maxWidth="lg">
         {/* <Box sx={{ my: 8 }}> */}
         <SWRConfig value={{
-          fetcher: (resource, init) => fetch(resource, init).then(res => res.json())
+          fetcher: fetcher
         }}>
           <Outlet />
         </SWRConfig>
